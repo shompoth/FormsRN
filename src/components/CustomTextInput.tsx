@@ -18,7 +18,8 @@ export default function CustomTextInput({
   containerStyle,
   ...textInputProps
 }: CustomTextInput) {
-  const error = { message: 'This field is required' };
+  //   const error = { message: 'This field is required' };
+  const error = undefined;
 
   return (
     <View style={containerStyle}>
@@ -32,7 +33,7 @@ export default function CustomTextInput({
         ]}
       />
       <Text style={styles.error} numberOfLines={1}>
-        {error?.message}
+        {/* {error?.message} */}
       </Text>
     </View>
   );
