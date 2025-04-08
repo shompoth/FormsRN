@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+import { useController } from 'react-hook-form';
 import {
   StyleSheet,
   TextInput,
@@ -10,22 +11,29 @@ import {
 
 type CustomTextInput = {
   label?: string;
+  name: string;
   containerStyle?: StyleProp<ViewStyle>;
 } & ComponentProps<typeof TextInput>;
 
 export default function CustomTextInput({
   label,
   containerStyle,
+  name,
   ...textInputProps
 }: CustomTextInput) {
-  //   const error = { message: 'This field is required' };
-  const error = undefined;
+  const {
+    field: { value, onChange, onBlur },
+    fieldState: { error },
+  } = useController({ name, rules: { required: `${name} is required` } });
 
   return (
     <View style={containerStyle}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         {...textInputProps}
+        value={value}
+        onChangeText={onChange}
+        onBlur={onBlur}
         style={[
           styles.input,
           textInputProps.style,
@@ -33,7 +41,7 @@ export default function CustomTextInput({
         ]}
       />
       <Text style={styles.error} numberOfLines={1}>
-        {/* {error?.message} */}
+        {error?.message}
       </Text>
     </View>
   );

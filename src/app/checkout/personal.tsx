@@ -3,9 +3,22 @@ import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import CustomTextInput from '../../components/CustomTextInput';
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from 'react-hook-form';
 
 export default function PersonalDetailsForm() {
-  const handleNext = () => {
+  const form = useForm();
+  // const {
+  //   handleSubmit,
+  //   formState: { errors },
+  //   control,
+  // } = useForm();
+
+  const handleNext: SubmitHandler<any> = () => {
     // validate form
 
     // redirect
@@ -14,30 +27,40 @@ export default function PersonalDetailsForm() {
 
   return (
     <KeyboardAwareScrollView>
-      <CustomTextInput label="Non complet" placeholder="John doe" />
-      <View style={{ flexDirection: 'row', gap: 5 }}>
+      <FormProvider {...form}>
         <CustomTextInput
-          label="Ville"
-          placeholder="City"
-          containerStyle={{ flex: 1 }}
+          name="fullName"
+          label="Non complet"
+          placeholder="John doe"
         />
+        <CustomTextInput name="adress" label="Adresse" placeholder="Adresse" />
+        <View style={{ flexDirection: 'row', gap: 5 }}>
+          <CustomTextInput
+            name="city"
+            label="Ville"
+            placeholder="City"
+            containerStyle={{ flex: 1 }}
+          />
+          <CustomTextInput
+            name="postCode"
+            label="Code postal"
+            placeholder="75000"
+            containerStyle={{ flex: 1 }}
+          />
+        </View>
         <CustomTextInput
-          label="Code postal"
-          placeholder="75000"
-          containerStyle={{ flex: 1 }}
+          name="phoneNumber"
+          label="Numéro de tel"
+          placeholder="0606060606"
+          inputMode="tel"
         />
-      </View>
-      <CustomTextInput
-        label="Numéro de tel"
-        placeholder="0606060606"
-        inputMode="tel"
-      />
 
-      <CustomButton
-        title="Redirect to Payment"
-        onPress={handleNext}
-        style={styles.button}
-      />
+        <CustomButton
+          title="Redirect to Payment"
+          onPress={form.handleSubmit(handleNext)}
+          style={styles.button}
+        />
+      </FormProvider>
     </KeyboardAwareScrollView>
   );
 }
