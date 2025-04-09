@@ -3,22 +3,34 @@ import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import CustomTextInput from '../../components/CustomTextInput';
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
-import {
-  Controller,
-  FormProvider,
-  SubmitHandler,
-  useForm,
-} from 'react-hook-form';
+
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+
+const PersonalInfoSchema = z.object({
+  fullName: z
+    .string({ message: 'Full name is required!' })
+    .min(1, { message: 'Full name must be longer than 1' }),
+  address: z.string().min(1, { message: 'Please provide your address!' }),
+  city: z.string().min(1, { message: 'City is required!' }),
+  postCode: z.string().min(1, { message: 'Postal code is required!' }),
+  phone: z.string().min(1, { message: 'Phone is required!' }),
+});
+
+type PersonalInfo = z.infer<typeof PersonalInfoSchema>;
 
 export default function PersonalDetailsForm() {
-  const form = useForm();
+  const form = useForm<PersonalInfo>({
+    resolver: zodResolver(PersonalInfoSchema),
+  });
   // const {
   //   handleSubmit,
   //   formState: { errors },
   //   control,
   // } = useForm();
 
-  const handleNext: SubmitHandler<any> = () => {
+  const handleNext: SubmitHandler<PersonalInfo> = (data) => {
     // validate form
 
     // redirect
@@ -33,7 +45,7 @@ export default function PersonalDetailsForm() {
           label="Non complet"
           placeholder="John doe"
         />
-        <CustomTextInput name="adress" label="Adresse" placeholder="Adresse" />
+        <CustomTextInput name="address" label="Adresse" placeholder="Adresse" />
         <View style={{ flexDirection: 'row', gap: 5 }}>
           <CustomTextInput
             name="city"
@@ -49,7 +61,7 @@ export default function PersonalDetailsForm() {
           />
         </View>
         <CustomTextInput
-          name="phoneNumber"
+          name="phone"
           label="Numéro de tel"
           placeholder="0606060606"
           inputMode="tel"
