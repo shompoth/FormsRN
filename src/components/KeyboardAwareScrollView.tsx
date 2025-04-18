@@ -13,10 +13,10 @@ export default function KeyboardAwareScrollView({
     >
       <ScrollView
         style={{ backgroundColor: 'white' }}
-        contentContainerStyle={{ flexGrow: 1, padding: 10, gap: 10 }}
+        contentContainerStyle={{ flexGrow: 1, padding: 10 }}
         keyboardShouldPersistTaps="handled"
       >
-        <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
+        <SafeAreaView edges={['bottom']} style={{ flex: 1, gap: 5 }}>
           {children}
         </SafeAreaView>
       </ScrollView>
