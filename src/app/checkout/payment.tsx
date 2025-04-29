@@ -6,25 +6,23 @@ import * as z from 'zod';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomTextInput from '../../components/CustomTextInput';
-
-const PaymentInfoSchema = z.object({
-  cardNumber: z.string().length(16),
-  expires: z
-    .string()
-    .regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, 'Utilisez le format MM/YY'),
-  cvv: z.coerce.number().min(100).max(999),
-});
-
-type PaymentInfo = z.infer<typeof PaymentInfoSchema>;
+import {
+  PaymentInfo,
+  PaymentInfoSchema,
+  useCheckoutForm,
+} from '../../contexts/CheckoutFormProvider';
 
 export default function PaymentDetailsForm() {
+  const { paymentInfo, setPaymentInfo } = useCheckoutForm();
+
   const form = useForm<PaymentInfo>({
     resolver: zodResolver(PaymentInfoSchema),
+    defaultValues: paymentInfo,
   });
 
-  const handleNext: SubmitHandler<PaymentInfo> = () => {
+  const handleNext: SubmitHandler<PaymentInfo> = (data) => {
     // validate form
-
+    setPaymentInfo(data);
     // redirect
     router.push('/checkout/confirm');
   };
